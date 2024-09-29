@@ -54,7 +54,7 @@ app.post("/upload", checkAuth, upload.single("image"), (req, res) => {
 });
 
 app.get("/posts/", getAll);
-app.get("/posts/tags", getLastTags);
+app.get("/tags", getLastTags);
 app.get("/posts/:id", getOne);
 app.post(
   "/posts",
