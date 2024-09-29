@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import multer from "multer";
+import cors from "cors";
 
 import {
   loginValidation,
@@ -53,7 +54,7 @@ app.post("/upload", checkAuth, upload.single("image"), (req, res) => {
   });
 });
 
-app.get("/posts/", getAll);
+app.get("/posts", getAll);
 app.get("/tags", getLastTags);
 app.get("/posts/:id", getOne);
 app.post(
