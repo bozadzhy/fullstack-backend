@@ -12,6 +12,22 @@ export const getAll = async (req, res) => {
   }
 };
 
+export const getLastTags = async (req, res) => {
+  try {
+    const posts = await PostModel.find().limit(5).exec(); // обьединяем пости и создателя поста с помощью populate().exec()
+    const tags = posts
+      .map((obj) => obj.tags)
+      .flat()
+      .slice(0, 5);
+    res.json(tags);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "не удалось получить теги",
+    });
+  }
+};
+
 export const getOne = async (req, res) => {
   try {
     const postId = req.params.id; // достаем динамический параметр id из запроса
