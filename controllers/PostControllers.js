@@ -42,7 +42,7 @@ export const getOne = async (req, res) => {
       {
         returnDocument: "after", // вернуть обновленній документ
       }
-    );
+    ).populate("user");
     if (!updatedPost) {
       return res.status(404).json({
         message: "статья не найдена",
