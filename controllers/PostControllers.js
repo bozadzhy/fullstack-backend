@@ -14,7 +14,7 @@ export const getAll = async (req, res) => {
 
 export const getLastTags = async (req, res) => {
   try {
-    const posts = await PostModel.find().limit(5).exec(); // обьединяем пости и создателя поста с помощью populate().exec()
+    const posts = await PostModel.find().limit(10).exec(); // обьединяем пости и создателя поста с помощью populate().exec()
     const tags = posts
       .map((obj) => obj.tags)
       .flat()
@@ -85,7 +85,7 @@ export const create = async (req, res) => {
       title: req.body.title,
       text: req.body.text,
       imageUrl: req.body.imageUrl,
-      tags: req.body.tags.split(','),
+      tags: req.body.tags.trim().split(','),
       user: req.userId,
     });
     const post = await doc.save();
@@ -109,7 +109,7 @@ export const update = async (req, res) => {
         title: req.body.title,
         text: req.body.text,
         imageUrl: req.body.imageUrl,
-        tags: req.body.tags.split(','),
+        tags: req.body.tags.trim().split(','),
         user: req.userId,
       }
     );
