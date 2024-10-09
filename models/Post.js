@@ -25,9 +25,16 @@ const PostSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-
+    comments: [
+      {
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, },
+        body: String,
+        date: { type: Date, default: Date.now },
+      },
+    ],
     imageUrl: String,
   },
+
   {
     timestamps: true,
   }

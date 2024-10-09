@@ -85,7 +85,7 @@ export const create = async (req, res) => {
       title: req.body.title,
       text: req.body.text,
       imageUrl: req.body.imageUrl,
-      tags: req.body.tags.split(',').map(str => str.replace(/\s+/g, '')),
+      tags: req.body.tags.split(",").map((str) => str.replace(/\s+/g, "")),
       user: req.userId,
     });
     const post = await doc.save();
@@ -98,18 +98,69 @@ export const create = async (req, res) => {
   }
 };
 
+export const createComments = async (req, res) => {
+  try {
+    const { id } = req.params; // ID поста
+    const { body } = req.body; // Текст комментария
+    const userId = req.userId; // ID пользователя из токена
+
+    if (!userId) {
+      return res.status(403).json({ message: "User not authenticated" });
+    }
+
+    const post = await PostModel.findById(id);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (!body) {
+      return res.status(400).json({ message: "Comment body is required" });
+    }
+
+    // Добавление нового комментария
+    post.comments.push({ user: userId, body });
+    await post.save();
+
+    res.status(201).json(post);
+  } catch (err) {
+    console.error("Error adding comment:", err.message);
+    res
+      .status(500)
+      .json({ message: "Error adding comment", error: err.message });
+  }
+};
+
+export const getComments = async (req, res) => {
+  try {
+    const post = await PostModel.findById(req.params.id).populate(
+      "comments.user"
+    );
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    res.json(post);
+  } catch (err) {
+    console.error("Error fetching post:", err.message);
+    res
+      .status(500)
+      .json({ message: "Error fetching post", error: err.message });
+  }
+};
+
 export const update = async (req, res) => {
   try {
     const postId = req.params.id;
     await PostModel.updateOne(
       {
         _id: postId,
-      },  
+      },
       {
         title: req.body.title,
         text: req.body.text,
         imageUrl: req.body.imageUrl,
-        tags: req.body.tags.split(',').map(str => str.replace(/\s+/g, '')),
+        tags: req.body.tags.split(",").map((str) => str.replace(/\s+/g, "")),
         user: req.userId,
       }
     );

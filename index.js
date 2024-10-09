@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import multer from "multer";
 import cors from "cors";
 
+import PostModel from "./models/Post.js";
+
 import {
   loginValidation,
   postCreateValidation,
@@ -12,7 +14,9 @@ import checkAuth from "./utils/checkAuth.js";
 import { register, login, getMe } from "./controllers/UserController.js";
 import {
   create,
+  createComments,
   getAll,
+  getComments,
   getLastTags,
   getOne,
   remove,
@@ -53,7 +57,11 @@ app.post("/upload", checkAuth, upload.single("image"), (req, res) => {
     url: `/uploads/${req.file.originalname}`,
   });
 });
+// comments
+app.post("/posts/:id/comments", checkAuth, createComments);
+app.get("/posts/:id/comments", getComments);
 
+// posts
 app.get("/posts", getAll);
 app.get("/tags", getLastTags);
 app.get("/posts/:id", getOne);
@@ -64,6 +72,8 @@ app.post(
   handleValidationErrors,
   create
 );
+
+// delete post
 app.delete("/posts/:id", checkAuth, remove);
 app.patch(
   "/posts/:id",
