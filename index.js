@@ -11,7 +11,7 @@ import {
   registValidation,
 } from "./validations.js";
 import checkAuth from "./utils/checkAuth.js";
-import { register, login, getMe } from "./controllers/UserController.js";
+import { register, login, getMe, getAllUsers } from "./controllers/UserController.js";
 import {
   create,
   createComments,
@@ -51,6 +51,7 @@ app.use("/uploads", express.static("uploads"));
 app.post("/auth/login", loginValidation, handleValidationErrors, login);
 app.post("/auth/register", registValidation, handleValidationErrors, register); // registValidation передаем вторім параметров в пост запрос для валидации
 app.get("/auth/me", checkAuth, getMe); // checkAuth проверка нужно ли віполнять функцию дальше с помощью next() (req, res) =>
+app.get("/users", getAllUsers); 
 
 app.post("/upload", checkAuth, upload.single("image"), (req, res) => {
   res.json({

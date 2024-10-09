@@ -2,7 +2,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import UserModel from "../models/User.js";
 
-
 export const register = async (req, res) => {
   try {
     const password = req.body.password;
@@ -109,6 +108,23 @@ export const getMe = async (req, res) => {
     res.json(userData);
   } catch (err) {
     console.error("Ошибка при получении пользователя:", err);
+    res.status(500).json({
+      message: "Нет доступа",
+    });
+  }
+};
+
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await UserModel.find();
+    if (!users) {
+      return res.status(404).json({
+        message: "Пользователи не найдени",
+      });
+    }
+    res.json(users);
+  } catch (err) {
+    console.error("Ошибка при получении пользователей:", err);
     res.status(500).json({
       message: "Нет доступа",
     });
