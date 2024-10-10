@@ -162,6 +162,7 @@ export const update = async (req, res) => {
         imageUrl: req.body.imageUrl,
         tags: req.body.tags.split(",").map((str) => str.replace(/\s+/g, "")),
         user: req.userId,
+        comments: req.body.comments,
       }
     );
     res.json({
